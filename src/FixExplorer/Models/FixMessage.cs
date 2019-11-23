@@ -70,6 +70,7 @@ namespace FixExplorer.Models
                 var fixVersion = string.Empty;
 
                 #region Tags
+                var clOrdIdExist = false;
                 foreach (var tag in tags)
                 {
                     if (String.IsNullOrEmpty(tag)) continue;
@@ -83,8 +84,12 @@ namespace FixExplorer.Models
                     switch (split[0])
                     {
                         case "11":
-                        case "131": // QuoteReqId for Message R and b
                             ClOrdID = split[1];
+                            clOrdIdExist = true;
+                            break;
+                        case "131": // QuoteReqId for Message R and b
+                        case "37":
+                            if (!clOrdIdExist) ClOrdID = split[1];
                             break;
                         case "35":
                             switch (split[1])
