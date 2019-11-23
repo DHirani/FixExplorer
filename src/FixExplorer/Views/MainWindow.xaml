@@ -1,0 +1,137 @@
+﻿<Window x:Class="FixExplorer.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:viewModels="clr-namespace:FixExplorer.ViewModels"
+        xmlns:models="clr-namespace:FixExplorer.Models"
+        xmlns:e="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+        xmlns:behaviours="clr-namespace:FixExplorer.Behaviors"
+        xmlns:converters="clr-namespace:FixExplorer.Converters"
+        Title="Fix Explorer" Height="700" Width="1200" >
+    <Window.Resources>
+        <viewModels:MainWindowViewModel x:Key="Windows1ViewModel" />
+        <converters:DebugConverter x:Key="debugConverter"/>
+    </Window.Resources>
+    <Grid DataContext="{StaticResource Windows1ViewModel}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="250"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Label Grid.Row="0" Content="Open File" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Grid.RowSpan="2" Width="73"/>
+        <Button Grid.Row="0" Name="FileButton" Content="..." Command="{Binding OpenFileCommand}" HorizontalAlignment="Left" Margin="83,10,0,0" VerticalAlignment="Top" Width="28" Height="21"/>
+        <DockPanel Grid.Row="1" Grid.Column="0" >
+            <ListBox Foreground ="WhiteSmoke" Background="Black" Name="FilesList" Grid.Row="1" Grid.Column="0" Margin="5"
+                                 ItemsSource="{Binding FilesCollection}" SelectedItem="{Binding SelectedFile}" >
+            </ListBox>
+        </DockPanel>
+        <Grid Background="Black" Grid.Column="1" Grid.Row="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <ListView Name="ListViewFixMessages" Foreground ="WhiteSmoke" Background="Black" Margin="5" Grid.Row="0" ItemsSource="{Binding FixMessagesCollection}" SelectedItem="{Binding SelectedFixMessage}" >
+                <e:Interaction.Triggers>
+                    <e:EventTrigger EventName="MouseDoubleClick">
+                        <e:InvokeCommandAction Command="{Binding Path=OrderDoubleClickCommand}"/>
+                    </e:EventTrigger>
+                </e:Interaction.Triggers>
+                <ListView.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Copy Message" Command="{Binding Path=MainFixMessageCopyCommand}"/>
+                    </ContextMenu>
+                </ListView.ContextMenu>
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListViewItem}">
+                        <Setter Property="Background" Value="Black"/>
+                        <Setter Property="Foreground" Value="WhiteSmoke"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="Black"/>
+                                <Setter Property="Foreground" Value="WhiteSmoke"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="Black"/>
+                                <Setter Property="Foreground" Value="WhiteSmoke"/>
+                            </Trigger>
+                            <DataTrigger Binding="{Binding Path=Mode}" Value="TX">
+                                <Setter Property="Foreground" Value="LimeGreen"></Setter>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding Path=Mode}" Value="RX">
+                                <Setter Property="Foreground" Value="Gold"></Setter>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ListView.ItemContainerStyle>
+                <ListView.View>
+                    <GridView>
+                        <GridView.Columns>
+                            <GridViewColumn Width="120" DisplayMemberBinding="{Binding Path=SendingTime, StringFormat=yyyy-MM-dd HH:mm:ss:fff}" Header="SendingTime" />
+                            <GridViewColumn Width="50" DisplayMemberBinding="{Binding Path=Mode}" Header="Mode" />
+                            <GridViewColumn Width="180" DisplayMemberBinding="{Binding Path=MsgType}" Header="MsgType" />
+                            <GridViewColumn Width="100" DisplayMemberBinding="{Binding Path=ClOrdID}" Header="Key" />
+                            <GridViewColumn Width="150" DisplayMemberBinding="{Binding Path=OrdStatus}" Header="OrdStatus" />
+                            <GridViewColumn Width="500" DisplayMemberBinding="{Binding Path=Message}" Header="Message" />
+                        </GridView.Columns>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+
+            <GridSplitter Grid.Row="1" Height="3" Background="LightGray"
+              VerticalAlignment="Top" HorizontalAlignment="Stretch" />
+            <ListView Foreground ="WhiteSmoke" Background="Black" Margin="5" Grid.Row="1" ItemsSource="{Binding Path=SelectedFixMessage.FixTags}" >
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListViewItem}">
+                        <Setter Property="Background" Value="Black"/>
+                        <Setter Property="Foreground" Value="WhiteSmoke"/>
+                        <Style.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter Property="Background" Value="Black"/>
+                                <Setter Property="Foreground" Value="WhiteSmoke"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="Black"/>
+                                <Setter Property="Foreground" Value="WhiteSmoke"/>
+                            </Trigger>
+                            <DataTrigger Binding="{Binding Path=Required}" Value="true">
+                                <Setter Property="Foreground" Value="LimeGreen"></Setter>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </ListView.ItemContainerStyle>
+                <ListView.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Copy Message" Command="{Binding Path=DetailFixMessageCopyCommand}"/>
+                    </ContextMenu>
+                </ListView.ContextMenu>
+                <ListView.View>
+                    <GridView>
+                        <GridView.Columns>
+                            <GridViewColumn Width="100" DisplayMemberBinding="{Binding Path=Tag}" Header="FixTag" />
+                            <GridViewColumn Width="200" DisplayMemberBinding="{Binding Path=Name}" Header="FixName" />
+                            <GridViewColumn Width="200" DisplayMemberBinding="{Binding Path=Value}" Header="FixValue" />
+                            <GridViewColumn Width="300" DisplayMemberBinding="{Binding Path=Description}" Header="Description" />
+                        </GridView.Columns>
+                    </GridView>
+                </ListView.View>
+            </ListView>
+
+        </Grid>
+
+        <GridSplitter Grid.Column="0" Grid.Row="1" ResizeDirection="Columns" 
+             Width="3"
+            HorizontalAlignment="Right" Background="LightGray"/>
+        <DatePicker Grid.Column="1" HorizontalAlignment="Left" Margin="60,10,0,0" VerticalAlignment="Top" FirstDayOfWeek="Monday" SelectedDate="{Binding SelectedDate}" Visibility="Hidden"/>
+        <Label Content="Date" Grid.Column="1" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Visibility="Hidden"/>
+        <CheckBox Content="Show Heartbeat" Command ="{Binding ShowHeartbeatCommand}" IsChecked ="{Binding ShowHeartbeat}"  Grid.Column="1" HorizontalAlignment="Left" Margin="190,13,0,0" VerticalAlignment="Top"/>
+        <CheckBox Content="Show TestRequest" Command ="{Binding ShowTestRequestCommand}" IsChecked ="{Binding ShowTestRequest}"  Grid.Column="1" HorizontalAlignment="Left" Margin="307,13,0,0" VerticalAlignment="Top"/>
+        <CheckBox Content="Show Last 500 Messages" Command ="{Binding ShowLast500MessageCommand}" IsChecked ="{Binding ShowLast500Message}"  Grid.Column="1" HorizontalAlignment="Left" Margin="435,13,0,0" VerticalAlignment="Top"/>
+        <Button Content="Refresh" Grid.Column="1" HorizontalAlignment="Left" Margin="607,10,0,0" VerticalAlignment="Top" Width="75" Command="{Binding RefreshCommand}"/>
+        <CheckBox Content="Show Fix Tag Description" Command ="{Binding ShowFixTagDescriptionCommand}" IsChecked ="{Binding ShowFixTagDescription}" Grid.Column="1" HorizontalAlignment="Left" Margin="697,13,0,0" VerticalAlignment="Top"/>
+
+
+    </Grid>
+</Window>

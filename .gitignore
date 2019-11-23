@@ -3,3 +3,9 @@
 ################################################################################
 
 /.vs/FixExplorer/v16/.suo
+/.vs
+/src/.vs/FixExplorer/DesignTimeBuild/.dtbcache
+/src/.vs/FixExplorer/v16/.suo
+/src/.vs/FixExplorer/v16/Server/sqlite3
+/src/FixExplorer/obj
+/src/FixExplorer/bin/Debug/netcoreapp3.0
