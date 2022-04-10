@@ -1,5 +1,5 @@
 # FixExplorer
-Panels
+Screen
 ![image](https://user-images.githubusercontent.com/4507527/162614318-5dbfdbaf-2cf4-493f-a990-e482ade4c62a.png)
 
 Example FIX messages
