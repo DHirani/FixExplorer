@@ -63,10 +63,23 @@ namespace FixExplorer.Models
                     Message = _rawMessage;
                     return; // not a valid fix message
                 }
-                Mode = _rawMessage.IndexOf("<RX>", StringComparison.Ordinal) > -1 ? "RX" : "TX";
+                if (_rawMessage.IndexOf("<RX>", StringComparison.Ordinal) > -1)
+                    Mode = "RX";
+                else if (_rawMessage.IndexOf("<TX>", StringComparison.Ordinal) > -1)
+                    Mode = "TX";
+                else if (_rawMessage.IndexOf(" IN ", StringComparison.Ordinal) > -1)
+                    Mode = "RX";
+                else if (_rawMessage.IndexOf(" OUT ", StringComparison.Ordinal) > -1)
+                    Mode = "TX";
+                else
+                    Mode = "RX";
                 Message = _rawMessage.Substring(startPos);
                 FixTags = new ObservableCollection<FixTag>();
                 var tags = Message.Split((char)1);
+                if (tags.Length == 1)
+                {
+                    tags = Message.Split('?');
+                }
                 var fixVersion = string.Empty;
 
                 #region Tags
