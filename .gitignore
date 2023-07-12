@@ -9,3 +9,8 @@
 /src/.vs/FixExplorer/v16/Server/sqlite3
 /src/FixExplorer/obj
 /src/FixExplorer/bin/Debug/netcoreapp3.0
+/src/.vs/FixExplorer/FileContentIndex
+/src/.vs/FixExplorer/DesignTimeBuild
+/src/.vs/FixExplorer/v17
+/src/.vs/ProjectEvaluation
+*.user
