@@ -89,6 +89,9 @@ namespace FixExplorer.Models
                     if (String.IsNullOrEmpty(tag)) continue;
 
                     var split = tag.Split('=');
+                    if (split.Length != 2)
+                        continue;
+                        
                     if (split[0] == "8")
                         fixVersion = split[1];
                     var fixTag = new FixTag(_showValueDescription, fixVersion, split[0], split[1]);
